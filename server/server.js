@@ -12,7 +12,7 @@ app.use(express.json());
 
 // ✅ CORS - Allow frontend to send credentials
 app.use(cors({
-  origin: "http://localhost:3000", // your React app's URL
+  origin: "https://e-commerce-view.onrender.com", // your React app's URL
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"]
 }));
