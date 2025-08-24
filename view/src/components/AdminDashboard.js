@@ -9,7 +9,7 @@ import AdminOrders from "./AdminOrders";
 import AdminCouponManager from './AdminCouponManager';
 import AdminAnalytics from './AdminAnalytics';
 
-const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const API = process.env.REACT_APP_API_URL || "https://e-commerce-server-yxxc.onrender.com";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("users");

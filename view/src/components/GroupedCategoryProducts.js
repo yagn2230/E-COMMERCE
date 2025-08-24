@@ -8,7 +8,7 @@ import ProductGrid from './ProductGrid';
 import Pagination from './Pagination';
 import '../assets/styles/Home.css';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API = process.env.REACT_APP_API_URL || 'https://e-commerce-server-yxxc.onrender.com';
 const PRODUCTS_PER_PAGE = 20;
 
 const GroupedCategoryProducts = () => {

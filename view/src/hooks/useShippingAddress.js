@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API = process.env.REACT_APP_API_URL || 'https://e-commerce-server-yxxc.onrender.com';
 
 const useShippingAddress = () => {
   const [address, setAddress] = useState(null);

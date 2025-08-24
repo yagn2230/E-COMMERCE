@@ -165,7 +165,7 @@ const AdminCategoryManager = () => {
   const [error, setError] = useState(null);
   const [newRootName, setNewRootName] = useState("");
 
-  const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
+  const API = process.env.REACT_APP_API_URL || "http://localhost:500";
 
   const fetchCategories = async () => {
     setFetching(true);

@@ -6,7 +6,7 @@ import ProductDetails from "./ProductDetails";
 import RelatedProducts from "./RelatedProducts";
 // import ProductSkeleton from "./ProductSkeleton";
 
-const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const API = process.env.REACT_APP_API_URL || "https://e-commerce-server-yxxc.onrender.com";
 
 const ProductViewPage = () => {
   const { slug } = useParams(); // ✅ use only slug

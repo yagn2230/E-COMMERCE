@@ -5,7 +5,7 @@ const useOrder = () => {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
 
-  const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const API = process.env.REACT_APP_API_URL || 'https://e-commerce-server-yxxc.onrender.com';
 
   // ✅ 1️⃣ Place Order (frontend only)
   const placeOrder = async (orderData) => {

@@ -8,7 +8,7 @@ import bed from '../assets/images/BedroomCollection.jpg'
 import any from '../assets/images/Luxury Living Room.png'
 import FAQWithSplitLayout from './FAQWithSplitLayout';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API = process.env.REACT_APP_API_URL || 'https://e-commerce-server-yxxc.onrender.com';
 
 const Home = () => {
   const [banners, setBanners] = useState([]);

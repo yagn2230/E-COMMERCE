@@ -8,7 +8,7 @@ import MyOrders from './MyOrders';
 import WishlistPage from './WishlistPage';
 import UserInfo from './UserInfo';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API = process.env.REACT_APP_API_URL || 'https://e-commerce-server-yxxc.onrender.com';
 
 const UserProfile = ({ user }) => {
   const [activeTab, setActiveTab] = useState('myinfo');

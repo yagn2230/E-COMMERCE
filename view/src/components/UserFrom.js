@@ -10,7 +10,7 @@ const UserFrom = () => {
     const data = { name, email, password };
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL|| "https://e-commerce-server-yxxc.onrender.com"}/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

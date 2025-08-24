@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const API = 'http://localhost:5000/banners';
+const API = 'https://e-commerce-server-yxxc.onrender.com/banners';
 
 const AdminBannerManager = () => {
   const [banners, setBanners] = useState([]);

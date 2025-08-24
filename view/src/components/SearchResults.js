@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { debounce } from 'lodash';
 import ProductCard from './ProductCard';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API = process.env.REACT_APP_API_URL || 'https://e-commerce-server-yxxc.onrender.com';
 
 const SearchResults = () => {
     const location = useLocation();

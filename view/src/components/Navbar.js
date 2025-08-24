@@ -12,7 +12,7 @@ import { debounce } from 'lodash';
 import useCart from '../hooks/useCart';
 import useWishlist from '../hooks/useWishlist';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API = process.env.REACT_APP_API_URL || 'https://e-commerce-server-yxxc.onrender.com';
 
 export default function Navbar({ user, handleLogout }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);

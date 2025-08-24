@@ -5,7 +5,7 @@ const useCart = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    const API = process.env.REACT_APP_API_URL || 'https://e-commerce-server-yxxc.onrender.com';
 
     const fetchCart = async () => {
         try {

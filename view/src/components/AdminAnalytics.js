@@ -14,7 +14,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API = process.env.REACT_APP_API_URL || 'https://e-commerce-server-yxxc.onrender.com';
 
 const AdminAnalytics = () => {
   const [report, setReport] = useState({
