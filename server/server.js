@@ -1,61 +1,72 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
-const cors = require('cors');
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+
 
 const app = express();
 
+// ✅ Allowed Origins
+const allowedOrigins = [
+  "https://e-commerce-view.onrender.com", // Deployed frontend
+  "http://localhost:3000",                // Local frontend
+];
+
+// ✅ CORS Setup
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS: " + origin));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
+
+
 // ✅ Middleware
 app.use(express.json());
+app.use(cookieParser());
 
-// ✅ CORS - Allow frontend to send credentials
-app.use(cors({
-  origin: "https://e-commerce-view.onrender.com", // your React app's URL
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"]
-}));
 
 // ✅ MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI;
 const PORT = process.env.PORT || 5000;
 
-if (!MONGO_URI) {
-  console.error("❌ MONGO_URI not set in .env");
-  process.exit(1);
-}
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch(err => {
+    console.error("❌ MongoDB connection failed:", err);
+    process.exit(1);
+  });
 
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log("✅ MongoDB connected"))
-.catch(err => {
-  console.error("❌ MongoDB connection failed:", err);
-  process.exit(1);
-});
+// ✅ Session Setup
+app.use(session({
+  name: "connect.sid",
+  secret: process.env.SESSION_SECRET || "yoursecretkey",
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: MONGO_URI }),
+  cookie: {
+    secure: process.env.NODE_ENV === "production", // true only on HTTPS
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+  },
+}));
 
-// ✅ Session Setup (store session in MongoDB)
-app.use(
-  session({
-    name: "connect.sid",
-    secret: process.env.SESSION_SECRET || "yoursecretkey",
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: MONGO_URI }),
-    cookie: {
-      secure: false,       // Set to true if using HTTPS
-      httpOnly: true,
-      sameSite: "lax",     // Helps with cross-origin
-      maxAge: 1000 * 60 * 60 * 24 // 1 day
-    }
-  })
-);
-
-// ✅ Debug session middleware
+// ✅ Debug Middleware
 app.use((req, res, next) => {
-  console.log("🧠 Session:", req.session);
+  console.log("🌍 Origin:", req.headers.origin);
+  console.log("🧠 Session ID:", req.sessionID);
+  console.log("➡️ Request:", req.method, req.originalUrl);
   next();
 });
 
@@ -71,11 +82,6 @@ app.use("/cart", require("./routes/cartRoutes"));
 app.use("/", require("./routes/couponRoutes"));
 
 // ✅ Test Route
-app.get("/", (req, res) => {
-  res.send("✅ API is working");
-});
+app.get("/", (req, res) => res.send("✅ API is working"));
 
-// ✅ Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

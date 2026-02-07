@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import useOrder from '../hooks/useOrder';
-import OrderCard from '../components/OrderCard';
+import React, { useEffect } from "react";
+import useOrder from "../hooks/useOrder";
+import OrderCard from "../components/OrderCard";
 
 const MyOrders = () => {
   const { fetchUserOrders, cancelOrder, orders, loading, error } = useOrder();
@@ -15,9 +15,11 @@ const MyOrders = () => {
         <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8">
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-2">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#0F2C59]">My Orders</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#0F2C59]">
+              My Orders
+            </h2>
             <div className="bg-[#0F2C59] text-[#EADBC8] px-4 py-1.5 rounded-full text-sm font-medium">
-              {orders.length} {orders.length === 1 ? 'Order' : 'Orders'}
+              {orders.length} {orders.length === 1 ? "Order" : "Orders"}
             </div>
           </div>
 
@@ -29,8 +31,16 @@ const MyOrders = () => {
           ) : error ? (
             <div className="bg-red-100 border-l-4 border-red-500 p-4 mb-6 rounded-lg">
               <div className="flex items-center gap-2">
-                <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <svg
+                  className="h-5 w-5 text-red-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <p className="text-red-700 font-medium">{error}</p>
               </div>
@@ -50,7 +60,9 @@ const MyOrders = () => {
                   d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                 />
               </svg>
-              <h3 className="mt-4 text-xl font-bold text-[#0F2C59]">No Orders Yet</h3>
+              <h3 className="mt-4 text-xl font-bold text-[#0F2C59]">
+                No Orders Yet
+              </h3>
               <p className="mt-2 text-[#0F2C59]/90 max-w-md mx-auto">
                 Your order history will appear here once you make purchases.
               </p>

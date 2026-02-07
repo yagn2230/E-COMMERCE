@@ -15,14 +15,12 @@ const PAYMENT_STATUS = {
 
 exports.placeOrder = async (req, res) => {
   try {
+
     const {
       products: cartItems,
       shippingAddress: clientAddress,
-      totalAmount,
       paymentMethod,
     } = req.body;
-
-    console.log("📨 Backend received cartItems:", cartItems);
 
     if (!cartItems || cartItems.length === 0) {
       return res.status(400).json({ message: "Cart is empty." });
@@ -32,11 +30,15 @@ exports.placeOrder = async (req, res) => {
 
     if (!clientAddress || !clientAddress.address) {
       const user = await User.findById(req.user._id);
-      if (!user || !user.shippingAddress || !user.shippingAddress.address) {
-        return res.status(400).json({ message: "Shipping address not provided or saved." });
+
+      if (!user?.shippingAddress?.address) {
+        return res.status(400).json({
+          message: "Shipping address not provided or saved."
+        });
       }
 
       const saved = user.shippingAddress;
+
       shippingAddress = {
         fullName: `${saved.firstName} ${saved.lastName}`,
         address: saved.address,
@@ -50,71 +52,78 @@ exports.placeOrder = async (req, res) => {
     }
 
     const orderItems = [];
-    log("🧾 Preparing order items...");
-    for (const item of cartItems) {
-      const productIdOrSlug = item.productId || item._id || item.product;
-      console.log("🧾 Cart item:", item);
-      console.log("🧾 Checking productIdOrSlug:", productIdOrSlug);
+    let calculatedTotal = 0;
+    const productsToUpdate = [];
 
-      let product = null;
+    console.log("🧾 Preparing order items...");
+
+    for (const item of cartItems) {
+
+      const productIdOrSlug = item.productId || item.product;
+
+      let product;
+
       if (mongoose.Types.ObjectId.isValid(productIdOrSlug)) {
         product = await Product.findById(productIdOrSlug);
-        if (product) {
-          console.log(`✅ Found product by ID: ${productIdOrSlug} -> ${product.title}`);
-        } else {
-          console.log(`❌ No product found by ID: ${productIdOrSlug}`);
-        }
-      }
-      // If not found by ID, try by slug
-      if (!product) {
+      } else {
         product = await Product.findOne({ slug: productIdOrSlug });
-        if (product) {
-          console.log(`✅ Found product by slug: ${productIdOrSlug} -> ${product.title}`);
-        } else {
-          console.log(`❌ No product found by slug: ${productIdOrSlug}`);
-        }
       }
+
       if (!product) {
-        console.log(`🚨 Product not found for cart item:`, item);
-        return res.status(404).json({ message: `Product not found: ${productIdOrSlug}`, cartItem: item });
+        return res.status(404).json({
+          message: `Product not found: ${productIdOrSlug}`
+        });
       }
 
       if (product.stock < item.quantity) {
-        console.log(`🚨 Insufficient stock for: ${product.title}, requested: ${item.quantity}, available: ${product.stock}`);
-        return res.status(400).json({ message: `Insufficient stock for: ${product.title}` });
+        return res.status(400).json({
+          message: `Insufficient stock for: ${product.title}`
+        });
       }
-
-      product.stock -= item.quantity;
-      await product.save();
 
       orderItems.push({
         product: product._id,
         quantity: item.quantity,
         price: product.price,
       });
+
+      calculatedTotal += product.price * item.quantity;
+
+      productsToUpdate.push({
+        product,
+        quantity: item.quantity
+      });
+    }
+
+    // 👉 Deduct stock AFTER validation
+    for (const item of productsToUpdate) {
+      item.product.stock -= item.quantity;
+      await item.product.save();
     }
 
     const paymentStatus =
-      paymentMethod === "Cash on Delivery" ? PAYMENT_STATUS.PENDING : PAYMENT_STATUS.PAID;
+      paymentMethod === "Cash on Delivery"
+        ? PAYMENT_STATUS.PENDING
+        : PAYMENT_STATUS.PAID;
 
     const order = await Order.create({
       user: req.user._id,
       products: orderItems,
       shippingAddress,
-      totalAmount,
+      totalAmount: calculatedTotal,
       paymentMethod,
       paymentStatus,
     });
-    log("✅ Order created successfully:", order);
+
+    console.log("✅ Order created successfully:", order);
 
     res.status(201).json({ success: true, order });
+
   } catch (error) {
     console.error("❌ Error placing order:", error);
     res.status(500).json({ error: error.message });
   }
 };
-
-
 
 
 
